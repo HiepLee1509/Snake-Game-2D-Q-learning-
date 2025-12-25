@@ -110,13 +110,30 @@ class QTableAgent:
     def save_table(self):
         print(f"Saving Q-Table with {len(self.q_table)} states...")
         with open("q_table.pkl", "wb") as f:
-            pickle.dump(self.q_table, f)
+            # Lưu cả bảng điểm (q_table) VÀ số ván đã chơi (n_games)
+            data = {
+                "q_table": self.q_table,
+                "n_games": self.n_games
+            }
+            pickle.dump(data, f)
 
     def load_table(self):
         if os.path.exists("q_table.pkl"):
             with open("q_table.pkl", "rb") as f:
-                self.q_table = pickle.load(f)
-            print("Loaded Q-Table.")
+                try:
+                    data = pickle.load(f)
+                    # Kiểm tra xem file cũ hay file mới
+                    if isinstance(data, dict) and "q_table" in data:
+                        self.q_table = data["q_table"]
+                        self.n_games = data["n_games"] # Khôi phục số ván
+                        print(f"Loaded Q-Table and continued from game {self.n_games}.")
+                    else:
+                        # Hỗ trợ đọc file cũ (chỉ có q_table)
+                        self.q_table = data
+                        self.n_games = 0
+                        print("Loaded old version Q-Table.")
+                except:
+                    print("Error loading Q-Table")
 
 # --- GIỮ NGUYÊN PHẦN LOGIC ĐIỀU KHIỂN BÊN DƯỚI ---
 def run_training():
