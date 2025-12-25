@@ -8,7 +8,7 @@ pygame.font.init()
 
 # --- CONFIGS ---
 BLOCK_SIZE = 10
-SPEED_TRAIN = 10000 
+SPEED_TRAIN = 100000
 SPEED_DEMO = 20
 GRID_W = 20
 GRID_H = 20
