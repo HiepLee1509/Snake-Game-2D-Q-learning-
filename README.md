@@ -31,3 +31,8 @@ Mở **Terminal** (trên Mac/Linux) hoặc **Command Prompt / PowerShell** (trê
 
 ```bash
 pip install numpy pygame
+
+### 3. Chạy câu lệnh
+
+```bash
+python main.py
