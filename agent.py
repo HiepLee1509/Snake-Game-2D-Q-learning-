@@ -2,7 +2,8 @@ import random
 import numpy as np
 import pickle
 import os
-from game import VectorizedSnakeGame, DemoGame, Direction, Point, BLOCK_SIZE, NUM_ENVS
+from settings import Direction, Point, BLOCK_SIZE, NUM_ENVS
+from game import VectorizedSnakeGame, DemoGame
 
 # Hyperparameters
 LR = 0.1

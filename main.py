@@ -1,4 +1,4 @@
-from game import MainMenu
+from ui import MainMenu
 from agent import run_training, run_demo, clear_q_table
 import pygame
 
