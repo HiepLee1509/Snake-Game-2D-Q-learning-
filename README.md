@@ -1,4 +1,4 @@
-# 🐍 Snake AI - Q-Learning & Vectorized Training
+# 🐍 Snake AI - Used Q-Learning algorithm
 
 Dự án này là một hệ thống huấn luyện AI chơi game Rắn săn mồi (Snake Game) sử dụng thuật toán **Reinforcement Learning (Q-Learning)**. Điểm đặc biệt của dự án là khả năng **huấn luyện song song (Vectorized Training)** trên 16 môi trường cùng lúc để tăng tốc độ học, kết hợp với thuật toán **Flood Fill (BFS)** giúp AI phát hiện và tránh các ngõ cụt.
 
@@ -30,7 +30,7 @@ Tải và cài đặt Python (phiên bản 3.8 trở lên) tại [python.org](ht
 Mở **Terminal** (trên Mac/Linux) hoặc **Command Prompt / PowerShell** (trên Windows) và chạy lệnh sau:
 
 ```bash
-pip install numpy pygame
+pip install -r requirements.txt
 ```
 
 ### 3. Chạy câu lệnh
