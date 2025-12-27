@@ -1,4 +1,3 @@
-# agent.py
 import random
 import numpy as np
 import pickle
@@ -8,7 +7,7 @@ from game import VectorizedSnakeGame, DemoGame
 
 # Hyperparameters
 LR = 0.001 
-GAMMA = 0.95 # Tăng Gamma để rắn quan tâm đến tương lai xa hơn (tránh bẫy)
+GAMMA = 0.95
 EPSILON_START = 80
 DECAY_RATE = 0.05
 
@@ -18,11 +17,11 @@ class QTableAgent:
         self.epsilon = 0 
         self.q_table = {} 
         self.load_table()
-
+    #state = (danger, move
     def get_state(self, game):
         head = game.snake[0]
         
-        # Các điểm lân cận
+        # Calculate danger in all 4 directions
         point_l = Point(head.x - BLOCK_SIZE, head.y)
         point_r = Point(head.x + BLOCK_SIZE, head.y)
         point_u = Point(head.x, head.y - BLOCK_SIZE)
@@ -33,8 +32,7 @@ class QTableAgent:
         dir_u = game.direction == Direction.UP
         dir_d = game.direction == Direction.DOWN
 
-        # --- LOGIC MỚI: DANGER = COLLISION HOẶC TRAP (Flood Fill) ---
-        # Hàm is_trap sẽ trả về True nếu đi vào đó là ngõ cụt
+        # is_trap function will return True if moving to that point leads to a trap
         is_danger_l = game.is_trap(point_l)
         is_danger_r = game.is_trap(point_r)
         is_danger_u = game.is_trap(point_u)
@@ -71,11 +69,13 @@ class QTableAgent:
         
         return tuple(map(int, state))
 
+    # Get Q-values for a state, initialize if not present
     def get_q_values(self, state):
         if state not in self.q_table:
             self.q_table[state] = [0.0, 0.0, 0.0]
         return self.q_table[state]
 
+    # Choose action based on epsilon-greedy policy
     def get_action(self, state, train_mode=True):
         final_move = [0, 0, 0]
         
@@ -93,16 +93,18 @@ class QTableAgent:
         final_move[move] = 1
         return final_move
 
+    # Train Q-value for a state-action pair
     def train_step(self, state, action, reward, next_state, done):
         action_idx = np.argmax(action)
         current_q = self.get_q_values(state)
         current_val = current_q[action_idx]
         
-        if done:
+        if done:    #dead
             target = reward
-        else:
+        else:       #live
             next_q = self.get_q_values(next_state)
             max_next_q = np.max(next_q)
+            # Q learning formula
             target = current_val + LR * (reward + GAMMA * max_next_q - current_val)
 
         self.q_table[state][action_idx] = target
@@ -110,7 +112,6 @@ class QTableAgent:
     def save_table(self):
         print(f"Saving Q-Table with {len(self.q_table)} states...")
         with open("q_table.pkl", "wb") as f:
-            # Lưu cả bảng điểm (q_table) VÀ số ván đã chơi (n_games)
             data = {
                 "q_table": self.q_table,
                 "n_games": self.n_games
@@ -122,7 +123,6 @@ class QTableAgent:
             with open("q_table.pkl", "rb") as f:
                 try:
                     data = pickle.load(f)
-                    # Kiểm tra xem file cũ hay file mới
                     if isinstance(data, dict) and "q_table" in data:
                         self.q_table = data["q_table"]
                         self.n_games = data["n_games"] # Khôi phục số ván
@@ -135,8 +135,9 @@ class QTableAgent:
                 except:
                     print("Error loading Q-Table")
 
-# --- GIỮ NGUYÊN PHẦN LOGIC ĐIỀU KHIỂN BÊN DƯỚI ---
+# --- Main Content ---
 def run_training():
+    """Chạy vòng lặp training 16 envs"""
     agent = QTableAgent()
     env = VectorizedSnakeGame()
     record = 0
@@ -152,6 +153,7 @@ def run_training():
             running = False
             continue
         states_new = [agent.get_state(game) for game in env.games]
+        #
         for i in range(NUM_ENVS):
             agent.train_step(states_old[i], final_moves[i], rewards[i], states_new[i], dones[i])
             if dones[i]:

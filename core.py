@@ -78,7 +78,7 @@ class SingleGame:
             return True
         return False
 
-    # --- TÍNH NĂNG MỚI: PHÁT HIỆN NGÕ CỤT (Flood Fill) ---
+    # --- PHÁT HIỆN NGÕ CỤT (Flood Fill) ---
     # Use BFS to determine if moving to point pt will lead to a trap
     def is_trap(self, pt):
         """
