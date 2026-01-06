@@ -3,9 +3,13 @@ import pygame
 from settings import *
 from core import SingleGame
 from ui import UIRenderer
+import os
 
 class VectorizedSnakeGame:
     def __init__(self):
+        
+        os.environ['SDL_VIDEO_CENTERED'] = '1'
+
         self.display = pygame.display.set_mode((BASE_WIDTH, BASE_HEIGHT), pygame.RESIZABLE)
         pygame.display.set_caption('Snake AI Training Cluster')
         self.canvas = pygame.Surface((BASE_WIDTH, BASE_HEIGHT))
