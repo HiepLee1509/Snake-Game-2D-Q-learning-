@@ -6,6 +6,7 @@ from settings import Direction, Point, BLOCK_SIZE, NUM_ENVS
 from game import VectorizedSnakeGame, DemoGame
 
 # Hyperparameters
+# Q learning formula: target = current_val + LR * (reward + GAMMA * max_next_q - current_val)
 LR = 0.001 
 GAMMA = 0.95
 EPSILON_START = 80
@@ -14,10 +15,10 @@ DECAY_RATE = 0.05
 class QTableAgent:
     def __init__(self):
         self.n_games = 0
-        self.epsilon = 0 
-        self.q_table = {} 
+        self.epsilon = 0
+        self.q_table = {}
         self.load_table()
-    #state = (danger, move
+    #state = (danger, move)
     def get_state(self, game):
         head = game.snake[0]
         
@@ -83,7 +84,7 @@ class QTableAgent:
             self.epsilon = max(1, EPSILON_START - self.n_games * DECAY_RATE)
         else:
             self.epsilon = 0
-        
+        #probability of discovery: 80/200 at the beginning, decreasing over time
         if random.randint(0, 200) < self.epsilon:
             move = random.randint(0, 2)
         else:
